@@ -130,8 +130,6 @@ void XV11Laser::poll(sensor_msgs::LaserScan::Ptr scan) {
       boost::asio::read(serial_,
                         boost::asio::buffer(&raw_bytes[start_count], 1));
 
-      //printf("Got first byte: %s\n", &raw_bytes);
-
       if (start_count == 0) {
         if (raw_bytes[start_count] == 0xFA) {
           start_count = 1;
@@ -144,9 +142,7 @@ void XV11Laser::poll(sensor_msgs::LaserScan::Ptr scan) {
           // the message
           got_scan = true;
 
-          printf("Got scan\n");
-
-          boost::asio::read(serial_, boost::asio::buffer(&raw_bytes[2], 1978));
+          boost::asio::read(serial_, boost::asio::buffer(&raw_bytes, 1978));
 
           scan->angle_min = 0.0;
           scan->angle_max = 2.0 * M_PI;

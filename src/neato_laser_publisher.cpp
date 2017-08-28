@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
           laser.poll(scan);
           break;
         } catch (boost::system::system_error ex) {
-          /* printf("Error: %s\n", ex.what()); */
+          printf("Error: %s\n", ex.what());
           sleep(0.1);
         }
       }
