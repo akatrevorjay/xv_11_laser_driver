@@ -64,8 +64,7 @@ int main(int argc, char **argv) {
     xv_11_laser_driver::XV11Laser laser(port, baud_rate, firmware_number, io);
 
     ROS_DEBUG("Setting up pubsub\n");
-    ros::Publisher laser_pub =
-        n.advertise<sensor_msgs::LaserScan>("scan", 1000);
+    ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
     ros::Publisher motor_pub = n.advertise<std_msgs::UInt16>("rpms", 1000);
 
     ROS_DEBUG("Starting loop\n");
@@ -76,9 +75,9 @@ int main(int argc, char **argv) {
       scan->header.stamp = ros::Time::now();
 
       laser.poll(scan);
+      laser_pub.publish(scan);
 
       rpms.data = laser.rpms;
-      laser_pub.publish(scan);
       motor_pub.publish(rpms);
     }
 

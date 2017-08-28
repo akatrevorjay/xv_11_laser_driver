@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <xv_11_laser_driver/xv11_laser.h>
 #include <cstdio>
+#include <xv_11_laser_driver/xv11_laser.h>
 
 namespace xv_11_laser_driver {
 XV11Laser::XV11Laser(const std::string &port, uint32_t baud_rate,
