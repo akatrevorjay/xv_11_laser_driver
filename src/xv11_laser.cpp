@@ -142,7 +142,7 @@ void XV11Laser::poll(sensor_msgs::LaserScan::Ptr scan) {
           // the message
           got_scan = true;
 
-          boost::asio::read(serial_, boost::asio::buffer(&raw_bytes, 1978));
+          boost::asio::read(serial_, boost::asio::buffer(&raw_bytes[2], 1978));
 
           scan->angle_min = 0.0;
           scan->angle_max = 2.0 * M_PI;
