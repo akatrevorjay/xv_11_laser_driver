@@ -58,39 +58,37 @@ int main(int argc, char **argv) {
   boost::asio::io_service io;
 
   try {
-    printf("Instantiating laser object port=%s baud_rate=%d firmware_version=%d frame_id=%s\n", port.c_str(), baud_rate, firmware_number, frame_id.c_str());
+    ROS_INFO("Instantiating laser object port=%s baud_rate=%d "
+            "firmware_version=%d frame_id=%s\n",
+            port.c_str(), baud_rate, firmware_number, frame_id.c_str());
     xv_11_laser_driver::XV11Laser laser(port, baud_rate, firmware_number, io);
 
-    printf("Setting up pubsub\n");
+    ROS_DEBUG("Setting up pubsub\n");
     ros::Publisher laser_pub =
         n.advertise<sensor_msgs::LaserScan>("scan", 1000);
     ros::Publisher motor_pub = n.advertise<std_msgs::UInt16>("rpms", 1000);
 
-    printf("Starting loop\n");
+    ROS_DEBUG("Starting loop\n");
     while (ros::ok()) {
       sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
+
       scan->header.frame_id = frame_id;
       scan->header.stamp = ros::Time::now();
-      printf("Polling for scan\n");
-      while (ros::ok()) {
-        try {
-          laser.poll(scan);
-          break;
-        } catch (boost::system::system_error ex) {
-          printf("Error: %s\n", ex.what());
-          sleep(0.1);
-        }
-      }
+
+      laser.poll(scan);
+
       rpms.data = laser.rpms;
       laser_pub.publish(scan);
       motor_pub.publish(rpms);
     }
+
     laser.close();
-    return 0;
   } catch (boost::system::system_error ex) {
-    ROS_ERROR("Error instantiating laser object. Are you sure you have the "
-              "correct port and baud rate? Error was %s",
-              ex.what());
+    ROS_ERROR("Error communicating with laser: %s", ex.what());
+    ROS_ERROR("Are you sure you have the correct port and baud rate?");
+
     return -1;
   }
+
+  return 0;
 }

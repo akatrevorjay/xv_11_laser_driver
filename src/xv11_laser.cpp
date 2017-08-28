@@ -124,8 +124,6 @@ void XV11Laser::poll(sensor_msgs::LaserScan::Ptr scan) {
     rpms = 0;
     int index;
     while (!shutting_down_ && !got_scan) {
-      //printf("Reading first byte.\n");
-
       // Wait until first data sync of frame: 0xFA, 0xA0
       boost::asio::read(serial_,
                         boost::asio::buffer(&raw_bytes[start_count], 1));
